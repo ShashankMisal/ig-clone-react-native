@@ -1,0 +1,30 @@
+export const users = [
+    {
+    user:"user1",
+        image:'https://yt3.ggpht.com/ytc/AKedOLRbdv3Di8paQyrgMF_VwFXPkhwVzcW59Vgo8dTsyw=s48-c-k-c0x00ffffff-no-rj'
+    },
+    {
+    user:"user2",
+        image:'https://yt3.ggpht.com/ch99lwO648KHJD2Udluy9qAjijC_XAe58lcg5YGMSsaIWnqoETYt44yZy_TYYtrpsZ5wtSOs=s48-c-k-c0x00ffffff-no-rj'
+    },
+    {
+    user:"user3",
+        image:'https://yt3.ggpht.com/tBEPr-zTNXEeae7VZKSZYfiy6azzs9OHowq5ZvogJeHoVtKtEw2PXSwzMBKVR7W0MI7gyND8=s48-c-k-c0x00ffffff-no-rj'
+    },
+    {
+    user:"user4",
+        image:'https://yt3.ggpht.com/ytc/AKedOLSCpg_UzufhbTIYM9giEmISlUC-zso1pLElgpSpGQ=s48-c-k-c0x00ffffff-no-rj'
+    },
+    {
+    user:"user5",
+        image:'https://yt3.ggpht.com/ytc/AKedOLSCpg_UzufhbTIYM9giEmISlUC-zso1pLElgpSpGQ=s48-c-k-c0x00ffffff-no-rj'
+    },
+    {
+    user:"user6",
+        image:'https://yt3.ggpht.com/ytc/AKedOLSCpg_UzufhbTIYM9giEmISlUC-zso1pLElgpSpGQ=s48-c-k-c0x00ffffff-no-rj'
+    },
+    {
+    user:"user7",
+        image:'https://yt3.ggpht.com/ytc/AKedOLSCpg_UzufhbTIYM9giEmISlUC-zso1pLElgpSpGQ=s48-c-k-c0x00ffffff-no-rj'
+    }
+]
