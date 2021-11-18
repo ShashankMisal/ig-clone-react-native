@@ -1,4 +1,4 @@
-export const users = [
+export const USERS = [
     {
     user:"user1",
         image:'https://yt3.ggpht.com/ytc/AKedOLRbdv3Di8paQyrgMF_VwFXPkhwVzcW59Vgo8dTsyw=s48-c-k-c0x00ffffff-no-rj'

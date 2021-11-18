@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, ScrollView, FlatList, StyleSheet, Image } from 'react-native'
-import { users } from '../../data/users.js'
+import { USERS } from '../../data/users.js'
 
 const Stories = () => {
 
@@ -16,9 +16,9 @@ const Stories = () => {
     );
 
     return (
-        <View>
+        <View style={styles.storiesContainer}>
             <FlatList
-                data={users}
+                data={USERS}
                 renderItem={renderItem}
                 keyExtractor={item => item.user}
                 horizontal
@@ -28,6 +28,9 @@ const Stories = () => {
 }
 
 const styles = StyleSheet.create({
+    storiesContainer: {
+        marginBottom: 10
+    },
     storyImage: {
         width: 70,
         height: 70,
