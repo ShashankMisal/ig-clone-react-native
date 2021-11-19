@@ -6,27 +6,54 @@ import Validator from 'email-validator'
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email().required('An email is required'),
+    username: Yup.string().required('An username is required').min(2, 'You username should have at least 2 characters'),
     password: Yup.string().required('Password is required').min(6, 'Your password should have at least 6 characters')
 })
 
-const LoginForm = ({navigation}) => {
+const SignUpForm = ({ navigation }) => {
     return (
         <Formik
-            initialValues={{ email: '', password: '' }}
+            initialValues={{ email: '', password: '', username: '' }}
             validationSchema={validationSchema}
             onSubmit={(values) => {
                 console.log(values)
                 // navigation.push('HomeScreen')
             }}
-            validateOnMount
+            validateOnMount={true}
         >
             {
-                ({ handleBlur, handleChange, handleSubmit, values, errors, isValid,}) => (
+                ({ handleBlur, handleChange, handleSubmit, values, errors, isValid }) => (
                     <>
                         <View style={styles.formContainer}>
-                                
+
                             <TextInput
-                                placeholder="Phone no , email or username"
+                                placeholder="Username"
+                                autoCapitalize='none'
+                                keyboardType="email-address"
+                                autoFocus
+                                placeholderTextColor="#444"
+                                onChangeText={handleChange('username')}
+                                onBlur={handleBlur('username')}
+                                selectTextOnFocus={true}
+                                value={values.username}
+                                style={[styles.input,
+                                {
+                                    borderColor:
+                                        1 > values.username.length || values.username.length >= 2
+                                            ? "#ccc"
+                                            : "red"
+                                }
+                                ]}
+                            />
+                            {
+                                errors.username && (
+                                    <Text style={{ fontSize: 10, color: "red", alignSelf: "flex-start", marginBottom: 5 }}>
+                                        {errors.username}*
+                                    </Text>
+                                )
+                            }
+                            <TextInput
+                                placeholder="Email-Id"
                                 autoCapitalize='none'
                                 keyboardType="email-address"
                                 textContentType="emailAddress"
@@ -37,18 +64,18 @@ const LoginForm = ({navigation}) => {
                                 selectTextOnFocus={true}
                                 value={values.email}
                                 style={[styles.input,
-                                    {
-                                        borderColor:
+                                {
+                                    borderColor:
                                         values.email.length < 1 || Validator.validate(values.email)
-                                        ? "#ccc"
-                                        : "red"
-                                    }
+                                            ? "#ccc"
+                                            : "red"
+                                }
                                 ]}
-                                />
+                            />
                             {
                                 errors.email && (
                                     <Text style={{ fontSize: 10, color: "red", alignSelf: "flex-start", marginBottom: 5 }}>
-                                         { errors.email}*
+                                        {errors.email}*
                                     </Text>
                                 )
                             }
@@ -69,7 +96,7 @@ const LoginForm = ({navigation}) => {
                                 style={[styles.input,
                                 {
                                     borderColor:
-                                      1 >  values.password.length || values.password.length >= 6
+                                        1 > values.password.length || values.password.length >= 6
                                             ? "#ccc"
                                             : "red"
                                 }
@@ -83,26 +110,20 @@ const LoginForm = ({navigation}) => {
                                 )
                             }
 
-                            <View style={{ alignSelf: "flex-end", marginBottom: 30 }}>
-                                <Text style={{ color: "#6BB0f5" }}>
-                                    Forgot password?
-                                </Text>
-                            </View>
-
                             <View style={styles.loginButton(isValid)}>
                                 <Pressable titleSize={20} onPress={handleSubmit}>
                                     <Text style={styles.buttonText}>
-                                        Log In
+                                        Sign Up
                                     </Text>
                                 </Pressable>
                             </View>
 
                             <View style={styles.signUpContainer}>
-                                <TouchableOpacity onPress={()=>navigation.push('SignupScreen')}>
+                                <TouchableOpacity onPress={() => navigation.push('LoginScreen')}>
                                     <Text>
-                                        Don't have an account?
+                                        Already have an account?
                                         <Text style={{ color: "#6BB0f5" }}>
-                                            {' '}Sign Up
+                                            {' '}Log In
                                         </Text>
                                     </Text>
 
@@ -141,7 +162,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         minHeight: 42,
-        borderRadius: 4
+        borderRadius: 4,
+        marginTop: 10
 
     }),
     buttonText: {
@@ -155,4 +177,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default LoginForm
+export default SignUpForm
