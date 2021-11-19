@@ -12,7 +12,7 @@ const validationSchema = Yup.object().shape({
 const PLACEHOLDER_IMG = 'https://www.brownweinraub.com/wp-content/uploads/2017/09/placeholder.jpg'
 
 
-const FormikPostUploader = () => {
+const FormikPostUploader = ({navigation}) => {
 
     const [thumbnail, setThumbnail] = React.useState(PLACEHOLDER_IMG)
 
@@ -21,7 +21,10 @@ const FormikPostUploader = () => {
         <Formik
             initialValues={{ caption: '', imageUrl: '' }}
             validationSchema={validationSchema}
-            onSubmit={(values) => console.log(values)}
+            onSubmit={(values) =>{
+                console.log(values)
+                navigation.push('HomeScreen')
+            }}
             validateOnMount
         >
             {

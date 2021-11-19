@@ -6,12 +6,12 @@ import Stories from '../components/home/Stories'
 import { POSTS } from '../data/post.js'
 import BottomTabs, { bottomTabIcons } from '../components/home/BottomTabs'
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
 
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header />
+            <Header navigation={navigation} />
             <Stories />
             <View style={styles.divider}></View>
             <FlatList
