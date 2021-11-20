@@ -1,11 +1,26 @@
 import React from 'react'
 import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native'
 import AddNewPostScreen from '../../screens/AddNewPostScreen'
+import {firebase} from '../../firebase'
+
+
 
 const Header = ({navigation}) => {
+
+    const handleSignOut = () =>
+        firebase.auth().signOut().then(() => {
+            console.log("SignedOut succuessfully")
+        }).catch((error) => {
+         
+        })
+        
+
+
     return (
         <View style={styles.container}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() =>{
+                handleSignOut()
+            }}>
                 <Image
                     style={styles.logo}
                     source={require('../../assets/header-logo.png')}

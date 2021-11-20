@@ -1,30 +1,44 @@
-import React from 'react'
-import { View, Text, TextInput, StyleSheet, Pressable, TouchableOpacity } from 'react-native'
+import React,{useCallback} from 'react'
+import { View, Text, TextInput, StyleSheet, Pressable, TouchableOpacity, Alert } from 'react-native'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import Validator from 'email-validator'
+import {firebase} from '../../firebase'
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email().required('An email is required'),
     password: Yup.string().required('Password is required').min(6, 'Your password should have at least 6 characters')
 })
 
-const LoginForm = ({navigation}) => {
+
+
+const LoginForm = ({ navigation }) => {
+
+    const onLogin = useCallback(async (email, password) => {
+        try {
+            await firebase.auth().signInWithEmailAndPassword(email, password)
+            console.log("logged in firebase success")
+        } catch (error) {
+            Alert.alert(error.message)
+        }
+
+    }, [])
+
+
     return (
         <Formik
             initialValues={{ email: '', password: '' }}
             validationSchema={validationSchema}
             onSubmit={(values) => {
-                console.log(values)
-                // navigation.push('HomeScreen')
+                onLogin(values.email, values.password)
             }}
             validateOnMount
         >
             {
-                ({ handleBlur, handleChange, handleSubmit, values, errors, isValid,}) => (
+                ({ handleBlur, handleChange, handleSubmit, values, errors, isValid, }) => (
                     <>
                         <View style={styles.formContainer}>
-                                
+
                             <TextInput
                                 placeholder="Phone no , email or username"
                                 autoCapitalize='none'
@@ -37,18 +51,18 @@ const LoginForm = ({navigation}) => {
                                 selectTextOnFocus={true}
                                 value={values.email}
                                 style={[styles.input,
-                                    {
-                                        borderColor:
+                                {
+                                    borderColor:
                                         values.email.length < 1 || Validator.validate(values.email)
-                                        ? "#ccc"
-                                        : "red"
-                                    }
+                                            ? "#ccc"
+                                            : "red"
+                                }
                                 ]}
-                                />
+                            />
                             {
                                 errors.email && (
                                     <Text style={{ fontSize: 10, color: "red", alignSelf: "flex-start", marginBottom: 5 }}>
-                                         { errors.email}*
+                                        {errors.email}*
                                     </Text>
                                 )
                             }
@@ -69,7 +83,7 @@ const LoginForm = ({navigation}) => {
                                 style={[styles.input,
                                 {
                                     borderColor:
-                                      1 >  values.password.length || values.password.length >= 6
+                                        1 > values.password.length || values.password.length >= 6
                                             ? "#ccc"
                                             : "red"
                                 }
@@ -98,7 +112,7 @@ const LoginForm = ({navigation}) => {
                             </View>
 
                             <View style={styles.signUpContainer}>
-                                <TouchableOpacity onPress={()=>navigation.push('SignupScreen')}>
+                                <TouchableOpacity onPress={() => navigation.push('SignupScreen')}>
                                     <Text>
                                         Don't have an account?
                                         <Text style={{ color: "#6BB0f5" }}>

@@ -1,12 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
+import { LogBox } from 'react-native';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import SignedInStack from './navigation';
-import AddNewPostScreen from './screens/AddNewPostScreen';
-import HomeScreen from './screens/HomeScreen';
+import AuthNavigation from './AuthNavigation';
+LogBox.ignoreLogs(['Setting a timer for a long period of time'])
 
 export default function App() {
   return (
-    <SignedInStack />
+    <AuthNavigation />
   );
 }

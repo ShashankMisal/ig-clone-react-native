@@ -1,8 +1,9 @@
-import React from 'react'
-import { View, Text, TextInput, StyleSheet, Pressable, TouchableOpacity } from 'react-native'
+import React,{useCallback} from 'react'
+import { View, Text, TextInput, StyleSheet, Pressable, TouchableOpacity,Alert } from 'react-native'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import Validator from 'email-validator'
+import {firebase,db} from '../../firebase'
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email().required('An email is required'),
@@ -10,14 +11,43 @@ const validationSchema = Yup.object().shape({
     password: Yup.string().required('Password is required').min(6, 'Your password should have at least 6 characters')
 })
 
+
+
 const SignUpForm = ({ navigation }) => {
+
+    const onSignUp = useCallback(async (email, password , username) => {
+
+        try {
+            const response = await firebase.auth().createUserWithEmailAndPassword(email, password)
+            if (response.user){
+                db.collection('users').add({
+                    owner_uid: response.user.uid,
+                    username:username,
+                    email:response.user.email,
+                    profile_picture: await getRandomProiflePic(),
+                })
+            }
+        } catch (error) {
+            Alert.alert(error.message)
+        }
+
+    },[])
+
+    const getRandomProiflePic = useCallback(
+        async () => {
+            const response = await fetch('https://randomuser.me/api')
+            const data = await response.json()
+            return data.results[0].picture.large
+        }
+        ,[]) 
+
     return (
         <Formik
             initialValues={{ email: '', password: '', username: '' }}
             validationSchema={validationSchema}
             onSubmit={(values) => {
-                console.log(values)
-                // navigation.push('HomeScreen')
+               onSignUp(values.email,values.password,values.username)
+                navigation.push('LoginScreen')
             }}
             validateOnMount={true}
         >
