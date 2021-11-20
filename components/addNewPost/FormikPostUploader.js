@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, Image, TextInput, StyleSheet, Button } from 'react-native'
 import * as Yup from 'yup'
 import { Formik, Input } from 'formik'
+import { firebase, db } from '../../firebase'
 
 
 const validationSchema = Yup.object().shape({
@@ -12,18 +13,69 @@ const validationSchema = Yup.object().shape({
 const PLACEHOLDER_IMG = 'https://www.brownweinraub.com/wp-content/uploads/2017/09/placeholder.jpg'
 
 
-const FormikPostUploader = ({navigation}) => {
+const FormikPostUploader = ({ navigation }) => {
 
     const [thumbnail, setThumbnail] = React.useState(PLACEHOLDER_IMG)
+
+    const [currentLoggedInUser, setCurrentLoggedInUser] = React.useState(null);
+
+
+    const getUserName = () => {
+        const user = firebase.auth().currentUser
+
+        const unsubscribe = db
+            .collection('users')
+            .where('owner_uid', '==', user.uid)
+            .limit(1)
+            .onSnapshot(snapshot =>
+                snapshot.docs.map(doc => {
+                    setCurrentLoggedInUser({
+                        username: doc.data().username,
+                        profilePicture: doc.data().profilePicture
+                    })
+                })
+            )
+
+        return unsubscribe
+    }
+
+    React.useEffect(() => {
+        getUserName()
+    }, [])
+
+
+
+    const uploadPostToFirebase = (imageUrl, caption) => {
+
+        const unsubscribe = db
+            .collection('users')
+            .doc(firebase.auth().currentUser?.email)
+            .collection('posts')
+            .add({
+                imageUrl: imageUrl,
+                caption: caption,
+                user: currentLoggedInUser.username,
+                profilePicture: currentLoggedInUser?.profilePicture,
+                owner_uid: firebase.auth().currentUser.uid,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                likes: 0,
+                likes_by_user: [],
+                comments: []
+            })
+            .then(() => navigation.goBack())
+            .catch((error)=>console.log(error,"uploaderror"))
+
+        return unsubscribe
+    }
+
 
 
     return (
         <Formik
             initialValues={{ caption: '', imageUrl: '' }}
             validationSchema={validationSchema}
-            onSubmit={(values) =>{
-                console.log(values)
-                navigation.push('HomeScreen')
+            onSubmit={(values) => {
+                uploadPostToFirebase(values.imageUrl, values.caption)
             }}
             validateOnMount
         >
@@ -31,9 +83,9 @@ const FormikPostUploader = ({navigation}) => {
                 ({ handleBlur, handleChange, handleSubmit, values, errors, isValid, dirty, touched }) => (
                     <>
                         <View style={styles.formContainer}>
-                            <Image 
-                            style={{ width: 100, height: 100 }} 
-                            source={{ uri: thumbnail ? thumbnail :PLACEHOLDER_IMG }} />
+                            <Image
+                                style={{ width: 100, height: 100 }}
+                                source={{ uri: thumbnail ? thumbnail : PLACEHOLDER_IMG }} />
 
                             <TextInput
                                 placeholder="Write a Caption"
@@ -47,7 +99,7 @@ const FormikPostUploader = ({navigation}) => {
                                 value={values.caption}
                             />
                             {
-                                 errors.caption && (
+                                errors.caption && (
                                     <Text style={{ fontSize: 10, color: "red" }}>
                                         {errors.caption}*
                                     </Text>
@@ -63,7 +115,7 @@ const FormikPostUploader = ({navigation}) => {
                                 onBlur={handleBlur('imageUrl')}
                                 value={values.imageUrl}
                                 selectTextOnFocus={true}
-                                onChange={e => setThumbnail (e.nativeEvent.text)}
+                                onChange={e => setThumbnail(e.nativeEvent.text)}
                             />
                             {
                                 errors.imageUrl && (
@@ -74,7 +126,7 @@ const FormikPostUploader = ({navigation}) => {
                             }
 
                             <View style={styles.shareButton}>
-                            <Button title="SHARE" onPress={handleSubmit} disabled={!dirty || !isValid} />
+                                <Button title="SHARE" onPress={handleSubmit} disabled={!isValid} />
                             </View>
 
                         </View>
@@ -104,9 +156,9 @@ const styles = StyleSheet.create({
         borderColor: "grey",
         color: "white"
     },
-    shareButton:{
+    shareButton: {
         width: '100%',
-        marginTop:5,
+        marginTop: 5,
     }
 });
 

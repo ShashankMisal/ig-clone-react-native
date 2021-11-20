@@ -5,8 +5,19 @@ import Post from '../components/home/Post'
 import Stories from '../components/home/Stories'
 import { POSTS } from '../data/post.js'
 import BottomTabs, { bottomTabIcons } from '../components/home/BottomTabs'
+import {db} from '../firebase'
 
 const HomeScreen = ({navigation}) => {
+
+        const [posts , setPosts] = React.useState([])
+    
+        React.useEffect(()=>{
+        db.
+        collectionGroup('posts').
+        onSnapshot(snapshot => {
+            setPosts(snapshot.docs.map( doc => doc.data()))
+        })
+    },[])
 
 
     return (
@@ -15,7 +26,7 @@ const HomeScreen = ({navigation}) => {
             <Stories />
             <View style={styles.divider}></View>
             <FlatList
-                data={POSTS}
+                data={posts}
                 renderItem={({item})=>(
                     <>
                         <Post post={item} />

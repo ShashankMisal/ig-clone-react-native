@@ -20,11 +20,14 @@ const SignUpForm = ({ navigation }) => {
         try {
             const response = await firebase.auth().createUserWithEmailAndPassword(email, password)
             if (response.user){
-                db.collection('users').add({
+                db
+                .collection('users')
+                .doc(response.user.email)
+                .set({
                     owner_uid: response.user.uid,
                     username:username,
                     email:response.user.email,
-                    profile_picture: await getRandomProiflePic(),
+                    profilePicture: await getRandomProiflePic(),
                 })
             }
         } catch (error) {
@@ -47,7 +50,6 @@ const SignUpForm = ({ navigation }) => {
             validationSchema={validationSchema}
             onSubmit={(values) => {
                onSignUp(values.email,values.password,values.username)
-                navigation.push('LoginScreen')
             }}
             validateOnMount={true}
         >
