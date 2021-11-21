@@ -27,14 +27,14 @@ const FormikPostUploader = ({ navigation }) => {
             .collection('users')
             .where('owner_uid', '==', user.uid)
             .limit(1)
-            .onSnapshot(snapshot =>
+            .onSnapshot(snapshot =>{
                 snapshot.docs.map(doc => {
                     setCurrentLoggedInUser({
                         username: doc.data().username,
                         profilePicture: doc.data().profilePicture
                     })
                 })
-            )
+            })
 
         return unsubscribe
     }
@@ -59,7 +59,7 @@ const FormikPostUploader = ({ navigation }) => {
                 owner_uid: firebase.auth().currentUser.uid,
                 owner_email:firebase.auth().currentUser.email,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                likes_by_user: [],
+                likes_by_users: [],
                 comments: []
             })
             .then(() => navigation.goBack())
