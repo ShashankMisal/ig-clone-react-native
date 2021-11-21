@@ -1,6 +1,5 @@
 import React from 'react'
-import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native'
-import AddNewPostScreen from '../../screens/AddNewPostScreen'
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
 import {firebase} from '../../firebase'
 
 
@@ -11,7 +10,7 @@ const Header = ({navigation}) => {
         firebase.auth().signOut().then(() => {
             console.log("SignedOut succuessfully")
         }).catch((error) => {
-         
+            console.log("Error is signing out")
         })
         
 

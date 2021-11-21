@@ -1,13 +1,37 @@
 import React from 'react'
 import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native'
+import {firebase , db} from '../../firebase'
 
 const Post = ({ post }) => {
+
+    const handleLike = post => {
+        const currentlikeStatus = !post.likes_by_users?.includes(
+            firebase.auth().currentUser.email
+        )
+
+        db.collection('users')
+            .doc(post.owner_email)
+            .collection('posts')
+            .doc(post.id)
+            .update({
+                likes_by_users: currentlikeStatus?
+                 firebase.firestore.FieldValue.arrayUnion(
+                    firebase.auth().currentUser.email
+                ):
+                firebase.firestore.FieldValue.arrayRemove(
+                    firebase.auth().currentUser.email
+                )
+            }).then(()=>{console.log("pushed Suceesfullt")}).catch((error)=>{console.log(error.message)})
+
+    }
+
+
     return (
-        <View>
+        <View >
             <PostHeader post={post} />
             <PostImage post={post} />
             <View style={{ margin: 10 }}>
-                <PostFooter />
+                <PostFooter post={post} handleLike={handleLike} />
                 <Likes post={post} />
                 <Captions post={post} />
                 <CommentSection post={post} />
@@ -70,10 +94,21 @@ const PostImage = ({ post }) => (
     </View>
 )
 
-const PostFooter = () => (
+const PostFooter = ({post,handleLike}) => (
     <View style={styles.postFooterIconsContainer}>
         <View style={styles.leftFooterIconsContainer}>
-            <Icon imgUrl={postFooterIcons[0].imageUrl} />
+            <TouchableOpacity onPress={()=>handleLike(post)}>
+            <Image 
+            style={styles.footerIcon} 
+            source={{
+                uri:post.likes_by_users?.includes(firebase.auth().currentUser.email)
+                ? postFooterIcons[0].likedImageUrl
+                : postFooterIcons[0].imageUrl
+            }} 
+            />
+            </TouchableOpacity>
+
+            {/* <Icon imgUrl={postFooterIcons[0].imageUrl} /> */}
             <Icon imgUrl={postFooterIcons[1].imageUrl} />
             <Icon imgUrl={postFooterIcons[2].imageUrl} />
         </View>
@@ -90,7 +125,7 @@ const Icon = ({ imgUrl }) => (
 const Likes = ({ post }) => (
     <View>
         <Text style={{ color: "white", fontWeight: "700", marginTop: 10 }}>
-            {post.likes.toLocaleString('en')} likes
+            {post.likes_by_users?.length.toLocaleString('en')} likes
         </Text>
     </View>
 )
@@ -124,7 +159,7 @@ const CommentSection = ({ post }) => (
 const Comments = ({ post }) => (
     <FlatList
         data={post.comments}
-        keyExtractor={item => item.user}
+        keyExtractor={item => item.createdAt}
         renderItem={(item) => (
             <View style={{ marginTop: 5 }}>
                 <Text style={{ color: "white" }}>

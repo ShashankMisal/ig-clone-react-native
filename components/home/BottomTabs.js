@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, TouchableOpacity, Image, StyleSheet, FlatList } from 'react-native'
+import {firebase} from '../../firebase'
 
 export const bottomTabIcons = [
     {
@@ -28,15 +29,16 @@ export const bottomTabIcons = [
     {
         name: 'Profile',
         active:
-            'https://yt3.ggpht.com/ytc/AKedOLRY9Un_v7Xr9dG1F5NEkqGsGSqwqRz0O3w3r1mI=s900-c-k-c0x00ffffff-no-rj',
+            'https://yt3.ggpht.com/ytc/AKedOLRzZooqYwfui_FlDKEAsYkD8rvL66qDV4McI5fl=s68-c-k-c0x00ffffff-no-rj',
         inactive:
-            'https://yt3.ggpht.com/ytc/AKedOLRY9Un_v7Xr9dG1F5NEkqGsGSqwqRz0O3w3r1mI=s900-c-k-c0x00ffffff-no-rj',
+            'https://yt3.ggpht.com/ytc/AKedOLRzZooqYwfui_FlDKEAsYkD8rvL66qDV4McI5fl=s68-c-k-c0x00ffffff-no-rj',
     },
 ]
 
 
 
 const BottomTabs = ({ icons }) => {
+
 
     const [activeTab, setActiveTab] = React.useState('Home')
 
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
         margin: 10
     },
     bottomTabsContainer:{
-        position:"absolute",
+        position:"relative",
         width:'100%',
         bottom:'0%',
         zIndex:99,

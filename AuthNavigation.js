@@ -11,7 +11,7 @@ const AuthNavigation = () => {
 
     React.useEffect(()=>(
         firebase.auth().onAuthStateChanged(user=>userHandler(user))
-    ),[firebase])
+    ),[])
 
     return (
         <>

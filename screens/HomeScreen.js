@@ -5,19 +5,20 @@ import Post from '../components/home/Post'
 import Stories from '../components/home/Stories'
 import { POSTS } from '../data/post.js'
 import BottomTabs, { bottomTabIcons } from '../components/home/BottomTabs'
-import {db} from '../firebase'
+import { db } from '../firebase'
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
 
-        const [posts , setPosts] = React.useState([])
-    
-        React.useEffect(()=>{
-        db.
-        collectionGroup('posts').
-        onSnapshot(snapshot => {
-            setPosts(snapshot.docs.map( doc => doc.data()))
-        })
-    },[])
+    const [posts, setPosts] = React.useState([])
+
+    React.useEffect(() => {
+        db.collectionGroup('posts').orderBy('createdAt','desc').onSnapshot(snapshot => {
+                setPosts(snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                })))
+            })
+    }, [])
 
 
     return (
@@ -27,13 +28,13 @@ const HomeScreen = ({navigation}) => {
             <View style={styles.divider}></View>
             <FlatList
                 data={posts}
-                renderItem={({item})=>(
+                renderItem={({ item }) => (
                     <>
                         <Post post={item} />
                         <View style={styles.divider}></View>
                     </>
                 )}
-                keyExtractor={item => item.user}
+                keyExtractor={item => item.createdAt}
             />
             <BottomTabs icons={bottomTabIcons} />
         </SafeAreaView>
