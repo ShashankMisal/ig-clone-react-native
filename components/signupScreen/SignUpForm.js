@@ -54,7 +54,7 @@ const SignUpForm = ({ navigation }) => {
             validateOnMount={true}
         >
             {
-                ({ handleBlur, handleChange, handleSubmit, values, errors, isValid }) => (
+                ({ handleBlur, handleChange, handleSubmit, values, errors, isValid , touched}) => (
                     <>
                         <View style={styles.formContainer}>
 
@@ -62,11 +62,9 @@ const SignUpForm = ({ navigation }) => {
                                 placeholder="Username"
                                 autoCapitalize='none'
                                 keyboardType="email-address"
-                                autoFocus
                                 placeholderTextColor="#444"
                                 onChangeText={handleChange('username')}
                                 onBlur={handleBlur('username')}
-                                selectTextOnFocus={true}
                                 value={values.username}
                                 style={[styles.input,
                                 {
@@ -78,22 +76,20 @@ const SignUpForm = ({ navigation }) => {
                                 ]}
                             />
                             {
-                                errors.username && (
+                                (errors.username && touched.username) ? (
                                     <Text style={{ fontSize: 10, color: "red", alignSelf: "flex-start", marginBottom: 5 }}>
                                         {errors.username}*
                                     </Text>
-                                )
+                                ):null
                             }
                             <TextInput
                                 placeholder="Email-Id"
                                 autoCapitalize='none'
                                 keyboardType="email-address"
                                 textContentType="emailAddress"
-                                autoFocus
                                 placeholderTextColor="#444"
                                 onChangeText={handleChange('email')}
                                 onBlur={handleBlur('email')}
-                                selectTextOnFocus={true}
                                 value={values.email}
                                 style={[styles.input,
                                 {
@@ -105,11 +101,11 @@ const SignUpForm = ({ navigation }) => {
                                 ]}
                             />
                             {
-                                errors.email && (
+                                (errors.email && touched.email) ? (
                                     <Text style={{ fontSize: 10, color: "red", alignSelf: "flex-start", marginBottom: 5 }}>
                                         {errors.email}*
                                     </Text>
-                                )
+                                ):null
                             }
 
                             <TextInput
@@ -120,11 +116,9 @@ const SignUpForm = ({ navigation }) => {
                                 secureTextEntry
                                 autoCorrect={false}
                                 textContentType="password"
-                                autoFocus
                                 onChangeText={handleChange('password')}
                                 onBlur={handleBlur('password')}
                                 value={values.password}
-                                selectTextOnFocus={true}
                                 style={[styles.input,
                                 {
                                     borderColor:
@@ -135,11 +129,11 @@ const SignUpForm = ({ navigation }) => {
                                 ]}
                             />
                             {
-                                errors.password && (
+                               (errors.password && touched.password)?(
                                     <Text style={{ fontSize: 10, color: "red", alignSelf: "flex-start" }}>
                                         {errors.password}*
                                     </Text>
-                                )
+                                ): null
                             }
 
                             <View style={styles.loginButton(isValid)}>

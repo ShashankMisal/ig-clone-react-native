@@ -32,10 +32,10 @@ const LoginForm = ({ navigation }) => {
             onSubmit={(values) => {
                 onLogin(values.email, values.password)
             }}
-            validateOnMount
+            validateOnMount={false}
         >
             {
-                ({ handleBlur, handleChange, handleSubmit, values, errors, isValid, }) => (
+                ({ handleBlur, handleChange, handleSubmit, values, errors, isValid,touched }) => (
                     <>
                         <View style={styles.formContainer}>
 
@@ -44,11 +44,9 @@ const LoginForm = ({ navigation }) => {
                                 autoCapitalize='none'
                                 keyboardType="email-address"
                                 textContentType="emailAddress"
-                                autoFocus
                                 placeholderTextColor="#444"
                                 onChangeText={handleChange('email')}
                                 onBlur={handleBlur('email')}
-                                selectTextOnFocus={true}
                                 value={values.email}
                                 style={[styles.input,
                                 {
@@ -60,11 +58,11 @@ const LoginForm = ({ navigation }) => {
                                 ]}
                             />
                             {
-                                errors.email && (
+                                (errors.email && touched.email) ? (
                                     <Text style={{ fontSize: 10, color: "red", alignSelf: "flex-start", marginBottom: 5 }}>
                                         {errors.email}*
                                     </Text>
-                                )
+                                ):null
                             }
 
                             <TextInput
@@ -75,11 +73,9 @@ const LoginForm = ({ navigation }) => {
                                 secureTextEntry
                                 autoCorrect={false}
                                 textContentType="password"
-                                autoFocus
                                 onChangeText={handleChange('password')}
                                 onBlur={handleBlur('password')}
                                 value={values.password}
-                                selectTextOnFocus={true}
                                 style={[styles.input,
                                 {
                                     borderColor:
@@ -90,11 +86,11 @@ const LoginForm = ({ navigation }) => {
                                 ]}
                             />
                             {
-                                errors.password && (
+                                (errors.password && touched.password)?(
                                     <Text style={{ fontSize: 10, color: "red", alignSelf: "flex-start" }}>
                                         {errors.password}*
                                     </Text>
-                                )
+                                ):null
                             }
 
                             <View style={{ alignSelf: "flex-end", marginBottom: 30 }}>
